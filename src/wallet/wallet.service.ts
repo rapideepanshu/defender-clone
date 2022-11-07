@@ -6,7 +6,6 @@ import { Wallet } from './wallet.interface';
 import { CreateWalletDto } from './wallet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class WalletService {
