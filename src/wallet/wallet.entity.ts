@@ -1,9 +1,9 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('wallet')
 export class WalletEntity {
-  @ObjectIdColumn()
-  _id: string;
+  @PrimaryGeneratedColumn()
+  id: string;
 
   @Column()
   name: string;

@@ -24,7 +24,7 @@ export class WalletService {
     const wallet = new ethers.Wallet(privateKey, provider);
     const data = await this.generateApiKeyAndSecret();
 
-    const new_wallet = await this.walletRepository.create({
+    const new_wallet = this.walletRepository.create({
       name,
       address: wallet.address,
       privateKey,
@@ -38,7 +38,10 @@ export class WalletService {
     return { name, address: wallet.address, chain: '1' };
   }
 
-  async generateApiKeyAndSecret(): Promise<{ key: string; secret: string }> {
+  async generateApiKeyAndSecret(): Promise<{
+    key: string;
+    secret: string;
+  }> {
     // api key
     const buffer = randomBytes(32);
     const key = buffer.toString('base64');
@@ -50,14 +53,20 @@ export class WalletService {
     return { key, secret };
   }
 
-  async getApiKeyAndSecret(
-    address: string,
-  ): Promise<{ Apikey: string; ApiSecret: string }> {
+  async getApiKey(address: string): Promise<{ Apikey: string }> {
     const wallet_data = await this.walletRepository.findOneBy({ address });
     if (!wallet_data) {
       throw new Error('Wallet address is not found');
     }
 
-    return { Apikey: wallet_data.apiKey, ApiSecret: wallet_data.apiSecret };
+    return { Apikey: wallet_data.apiKey };
+  }
+
+  async getPrivateKey(apiKey: string) {
+    const wallet = await this.walletRepository.findOne({
+      where: { apiKey },
+    });
+
+    return wallet.privateKey;
   }
 }

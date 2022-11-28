@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WalletEntity } from './wallet/wallet.entity';
 import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: 'mongodb://localhost/wallets',
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'Podio123!',
+      database: 'user_wallet',
+      autoLoadEntities: true,
       synchronize: true,
-      useUnifiedTopology: true,
-      entities: [WalletEntity],
     }),
     WalletModule,
   ],
