@@ -1,8 +1,20 @@
 import { CreateWalletDto } from './wallet.dto';
-import { Controller, Post, Body, Get, Param, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Headers,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Wallet } from './wallet.interface';
 import { WalletService } from './wallet.service';
+import { GetUser } from 'src/users/get-user.decorator';
+import { User } from 'src/users/users.entity';
 
+@UseGuards(AuthGuard())
 @Controller('wallet')
 export class WalletController {
   constructor(private walletService: WalletService) {}
@@ -17,8 +29,12 @@ export class WalletController {
   @Post('/create-wallet')
   async createWalletandKey(
     @Body() createWalletDto: CreateWalletDto,
+    @GetUser() user: User,
   ): Promise<Wallet> {
-    return this.walletService.generateEthereumAddressAndKey(createWalletDto);
+    return this.walletService.generateEthereumAddressAndKey(
+      createWalletDto,
+      user,
+    );
   }
 
   @Get('/private-key')

@@ -6,6 +6,7 @@ import { Wallet } from './wallet.interface';
 import { CreateWalletDto } from './wallet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from 'src/users/users.entity';
 
 @Injectable()
 export class WalletService {
@@ -16,6 +17,7 @@ export class WalletService {
 
   async generateEthereumAddressAndKey(
     createWalletDto: CreateWalletDto,
+    user: User,
   ): Promise<Wallet> {
     const { name } = createWalletDto;
     const id = randomBytes(32).toString('hex');
@@ -30,12 +32,13 @@ export class WalletService {
       privateKey,
       apiKey: data.key,
       apiSecret: data.secret,
-      chain: '1',
+      balance: (await provider.getBalance(wallet.address)).toString(),
+      user,
     });
 
     await this.walletRepository.save(new_wallet);
 
-    return { name, address: wallet.address, chain: '1' };
+    return { name, address: wallet.address, balance: new_wallet.balance };
   }
 
   async generateApiKeyAndSecret(): Promise<{

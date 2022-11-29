@@ -1,9 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BigNumber } from 'ethers';
+import { User } from 'src/users/users.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('wallet')
 export class WalletEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  relayer_id: string;
 
   @Column()
   name: string;
@@ -21,5 +23,8 @@ export class WalletEntity {
   apiSecret: string;
 
   @Column()
-  chain: string;
+  balance: string;
+
+  @ManyToOne(() => User, (user) => user.wallets)
+  user: User;
 }
