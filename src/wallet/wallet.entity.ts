@@ -23,7 +23,7 @@ export class WalletEntity {
   apiSecret: string;
 
   @Column()
-  balance: string;
+  chainId: number;
 
   @ManyToOne(() => User, (user) => user.wallets)
   user: User;

@@ -3,5 +3,5 @@ export interface Wallet {
 
   address: string;
 
-  balance: string;
+  chainId: number;
 }
